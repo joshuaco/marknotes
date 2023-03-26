@@ -1,15 +1,28 @@
 import { nanoid } from 'nanoid';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Split from 'react-split';
-import Sidebar from './components/Sidebar';
-import Editor from './components/Editor';
 import './App.css';
+import Editor from './components/Editor';
+import Sidebar from './components/Sidebar';
+
+/*Features to add
+ * Sync notes with localStorage
+ * Add note summary titles
+ * Move modified notes to the top of the list
+ * Delete notes
+ */
 
 function App() {
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState(
+    JSON.parse(localStorage.getItem("notes")) || []
+  );
   const [currentNoteId, setCurrentNoteId] = useState(
     (notes[0] && notes[0].id) || ''
   );
+
+  useEffect(() => {
+    localStorage.setItem('notes', JSON.stringify(notes));
+  }, [notes]);
 
   function createNewNote() {
     const newNote = {
@@ -42,25 +55,16 @@ function App() {
     <div className='App'>
       <main>
         {notes.length > 0 ? (
-          <Split 
-          sizes={[20, 80]} 
-          direction='horizontal' 
-          className='split'
-          >
+          <Split sizes={[20, 80]} direction='horizontal' className='split'>
             <Sidebar
               notes={notes}
               currentNote={findCurrentNode()}
               setCurrentNoteId={setCurrentNoteId}
               newNote={createNewNote}
             />
-            {
-              currentNoteId &&
-              notes.length > 0 &&
-              <Editor 
-                currentNote={findCurrentNode()}
-                updateNote={updateNote}
-              />
-            }
+            {currentNoteId && notes.length > 0 && (
+              <Editor currentNote={findCurrentNode()} updateNote={updateNote} />
+            )}
           </Split>
         ) : (
           <div className='no-notes'>
