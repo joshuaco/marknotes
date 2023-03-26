@@ -6,14 +6,14 @@ import Editor from './components/Editor';
 import Sidebar from './components/Sidebar';
 
 /*Features to add
- * Sync notes with localStorage
+ * Sync notes with localStorage (done!)
  * Add note summary titles
  * Move modified notes to the top of the list
  * Delete notes
  */
 
 function App() {
-  const [notes, setNotes] = useState(
+  const [notes, setNotes] = useState(() =>
     JSON.parse(localStorage.getItem("notes")) || []
   );
   const [currentNoteId, setCurrentNoteId] = useState(
