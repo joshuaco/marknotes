@@ -2,6 +2,7 @@ import { nanoid } from 'nanoid';
 import { useState } from 'react';
 import Split from 'react-split';
 import Sidebar from './components/Sidebar';
+import Editor from './components/Editor';
 import './App.css';
 
 function App() {
@@ -20,7 +21,13 @@ function App() {
   }
 
   function updateNote(text) {
-    /* TODO */
+    setNotes((oldNotes) =>
+      oldNotes.map((oldNote) => {
+        return oldNote.id === currentNoteId
+          ? { ...oldNote, body: text }
+          : oldNote;
+      })
+    );
   }
 
   function findCurrentNode() {
@@ -35,10 +42,10 @@ function App() {
     <div className='App'>
       <main>
         {notes.length > 0 ? (
-          <Split
-            sizes={[30, 70]}
-            direction="horizontal" 
-            className="split"
+          <Split 
+          sizes={[20, 80]} 
+          direction='horizontal' 
+          className='split'
           >
             <Sidebar
               notes={notes}
@@ -46,6 +53,14 @@ function App() {
               setCurrentNoteId={setCurrentNoteId}
               newNote={createNewNote}
             />
+            {
+              currentNoteId &&
+              notes.length > 0 &&
+              <Editor 
+                currentNote={findCurrentNode()}
+                updateNote={updateNote}
+              />
+            }
           </Split>
         ) : (
           <div className='no-notes'>

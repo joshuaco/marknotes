@@ -1,7 +1,8 @@
 .sidebar {
-  width: 20% !important;
+  min-width: 20%;
   height: calc(100vh - 16px);
   background-color: #333;
+  border-radius: 8px 0px 0px 8px ;
 }
 
 .sidebar--header {

@@ -1,0 +1,14 @@
+.editor {
+  width: 80%;
+  height: calc(100vh - 16px);
+}
+
+.ql-editor p,
+.ql-editor.ql-blank::before {
+  font-size: 1.3em;
+  font-weight: 100;
+}
+
+.mde-header .mde-tabs button {
+  color: #333;
+}
