@@ -2,6 +2,7 @@ import './Sidebar.css';
 
 const Sidebar = (props) => {
   const noteElements = props.notes.map((note, index) => {
+    const title = note.body.split("\n")[0].split("#");
     return (
       <div key={note.id}>
         <div
@@ -10,7 +11,12 @@ const Sidebar = (props) => {
           }`}
           onClick={() => props.setCurrentNoteId(note.id)}
         >
-          <h4 className='text-snippet'>Nota {index + 1}</h4>
+          <h4 className='text-snippet'>{title}</h4>
+          <button 
+            className="delete-btn"
+            onClick={(event) => props.deleteNote(event, note.id)}>
+            <i className="gg-trash trash-icon"></i>
+          </button>
         </div>
       </div>
     );

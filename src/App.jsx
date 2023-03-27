@@ -13,8 +13,8 @@ import Sidebar from './components/Sidebar';
  */
 
 function App() {
-  const [notes, setNotes] = useState(() =>
-    JSON.parse(localStorage.getItem("notes")) || []
+  const [notes, setNotes] = useState(
+    () => JSON.parse(localStorage.getItem('notes')) || []
   );
   const [currentNoteId, setCurrentNoteId] = useState(
     (notes[0] && notes[0].id) || ''
@@ -34,13 +34,19 @@ function App() {
   }
 
   function updateNote(text) {
-    setNotes((oldNotes) =>
-      oldNotes.map((oldNote) => {
-        return oldNote.id === currentNoteId
-          ? { ...oldNote, body: text }
-          : oldNote;
-      })
-    );
+    // Put the most recently-modified note at the top
+    setNotes((oldNotes) => {
+      const newArray = [];
+      for (let i = 0; i < oldNotes.length; i++) {
+        const oldNote = oldNotes[i];
+        if (oldNote.id === currentNoteId) {
+          newArray.unshift({ ...oldNote, body: text });
+        } else {
+          newArray.push(oldNote);
+        }
+      }
+      return newArray;
+    });
   }
 
   function findCurrentNode() {
@@ -49,6 +55,11 @@ function App() {
         return note.id === currentNoteId;
       }) || notes[0]
     );
+  }
+
+  function deleteNote(event, noteId) {
+    event.stopPropagation();
+    setNotes((oldNotes) => oldNotes.filter((note) => note.id !== noteId));
   }
 
   return (
@@ -61,6 +72,7 @@ function App() {
               currentNote={findCurrentNode()}
               setCurrentNoteId={setCurrentNoteId}
               newNote={createNewNote}
+              deleteNote={deleteNote}
             />
             {currentNoteId && notes.length > 0 && (
               <Editor currentNote={findCurrentNode()} updateNote={updateNote} />
